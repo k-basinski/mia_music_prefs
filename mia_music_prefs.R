@@ -1,9 +1,9 @@
 library(tidyverse)
-library(car)
 library(ez)
 library(Hmisc)
 library(cowplot)
 
+# Check this to see the file path is correct
 d <- read.csv("data_mia.csv")
 
 # some custom funcitons for means and sd's
@@ -16,7 +16,7 @@ my_sd <- function(x) {
 }
 
 
-# Etykiety
+# Plot text
 localeSet <- "EN" # EN albo PL
 
 if(localeSet == "PL"){
@@ -44,11 +44,7 @@ if(localeSet == "PL"){
   graphTitles.HR <- "Heart rate"
 }
 
-# FILTER
-# only women
-#d <- filter(d, Gender == 1)
-# only men
-#d <- filter(d, Gender == 0)
+
 
 d.PainMax <- d[,1:5]
 d.PainAvg <- d[,c(1, 6:9)]
@@ -176,6 +172,10 @@ an.painMax
 an.painAvg
 #post-hoc
 pairwise.t.test(dm.PainAvg$value, dm.PainAvg$condition, paired = T, p.adjust.method = "bonferroni")
+# descriptives
+dm.PainAvg %>% 
+  group_by(condition) %>% 
+  summarise(M = my_mean(value), SD = my_sd(value))
 
 an.painContr
 
@@ -187,6 +187,10 @@ an.painThresh
 an.painToler
 #post-hoc
 pairwise.t.test(dm.PainToler$value, dm.PainToler$condition, paired = T, p.adjust.method = "bonferroni")
+# descriptives
+dm.PainToler %>% 
+  group_by(condition) %>% 
+  summarise(M = my_mean(value), SD = my_sd(value))
 
 
 # BP systolic
@@ -201,12 +205,6 @@ an.BPdiast
 an.HR
 
 # BARPLOTS (ggplot2)
-# Theme
-# cleanup <- theme(panel.grid.major = element_blank(),
-#                 panel.grid.minor = element_blank(),
-#                 panel.background = element_blank(),
-#                 axis.line = element_line(color = "black"))
-
 
 # Max pain
 pMaxBar <- ggplot(dm.PainMax, aes(condition, value))
@@ -299,6 +297,5 @@ HRBar <- HRBar + stat_summary(fun.y = mean, geom = "bar", width = .6) +
 #HRBar  
 
 # output plots
-plot_grid(pThreshBar, pTolerBar, labels = "AUTO")
-plot_grid(pMaxBar, pAvgBar, pContrBar,labels = "AUTO", ncol = 3)
+plot_grid(pThreshBar, pTolerBar, pMaxBar, pAvgBar, pContrBar, labels = "AUTO")
 plot_grid(BPSysBar, BPDiastBar, HRBar, labels = "AUTO", ncol = 3)
