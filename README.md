@@ -6,4 +6,4 @@ This is a repository containing data for the paper "The Role of Musical Attribut
   - Hmisc
   - Cowplot
 
-If you use this data, please tell me about it.
+If you use this data for a review/meta-analysis (or any other usage), please [tell me about it](mailto:k.basinski@gumed.edu.pl).
